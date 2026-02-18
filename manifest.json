@@ -1,0 +1,16 @@
+{
+  "name": "Beta Ranker - Akıllı Sıralayıcı",
+  "short_name": "BetaRank",
+  "description": "Ürünleri istatistiksel güven aralığına göre sıralar.",
+  "start_url": "index.html",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#4f46e5",
+  "icons": [
+    {
+      "src": "beta_8646539.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
