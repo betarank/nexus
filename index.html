@@ -4,16 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Beta Ürün Sıralayıcı</title>
-
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#4f46e5">
     <link rel="apple-touch-icon" href="beta_8646539.png">
-
-    <script>
-      if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('sw.js');
-      }
-    </script>
 
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
@@ -23,13 +16,7 @@
             text-align: left; border-radius: 12px; padding: 18px; position: absolute;
             z-index: 50; top: 150%; left: 50%; margin-left: -145px; opacity: 0;
             transition: opacity 0.2s; font-size: 0.85rem; line-height: 1.6;
-            box-shadow: 0 10px 20px -5px rgba(0, 0, 0, 0.4);
-            border: 1px solid #334155;
-        }
-        .tooltip .tooltiptext::after {
-            content: ""; position: absolute; bottom: 100%; left: 50%;
-            margin-left: -5px; border-width: 5px; border-style: solid;
-            border-color: transparent transparent #1e293b transparent;
+            box-shadow: 0 10px 20px -5px rgba(0, 0, 0, 0.4); border: 1px solid #334155;
         }
         .tooltip:hover .tooltiptext { visibility: visible; opacity: 1; }
         .product-row { transition: all 0.2s ease; }
@@ -37,15 +24,14 @@
         .scroll-hint { display: none; }
     </style>
 </head>
-<body class="bg-slate-50 p-4 md:p-10 font-sans text-slate-900 leading-relaxed">
+<body class="bg-slate-50 p-4 md:p-10 font-sans text-slate-900">
     <div class="max-w-5xl mx-auto">
-        
         <header class="mb-8 text-center">
             <div class="flex items-center justify-center gap-3 mb-2">
                 <img src="beta_8646539.png" alt="Logo" class="w-10 h-10 object-contain">
                 <h1 class="text-2xl md:text-3xl font-extrabold text-indigo-700 tracking-tight">Beta Sıralayıcı</h1>
             </div>
-            <p class="text-slate-500 text-xs md:text-sm">Veri Bilimi ile Yanıltıcı Puanları Ayıklayan Sıralayıcı</p>
+            <p class="text-slate-500 text-xs md:text-sm italic">Yanıltıcı Ortalamaları Ayıklayan İstatistiksel Filtre</p>
         </header>
 
         <div class="bg-white p-6 rounded-2xl shadow-sm mb-6 grid grid-cols-1 md:grid-cols-2 gap-6 border border-slate-200">
@@ -61,47 +47,39 @@
                         <div class="tooltiptext">
                             <strong class="text-indigo-300 block mb-3 pb-1 border-b border-white/10 italic">İstatistiksel Güven Aralığı</strong>
                             Bu ayar, ürünün puanı hesaplanırken "değerlendiren sayısına" ne kadar ağırlık verileceğini belirler:<br><br>
-                            <span class="text-indigo-200 font-bold underline">1. Derece (%68.2):</span> Ortalama puanı ön planda tutar. Az sayıda veri olsa bile puana güvenme eğilimindedir.<br><br>
-                            <span class="text-indigo-200 font-bold underline">2. Derece (%95.4):</span> Dengelidir. Puan ve kişi sayısını ortak tartar (Tavsiye edilen).<br><br>
-                            <span class="text-indigo-200 font-bold underline">3. Derece (%99.7):</span> Değerlendirici odaklıdır. Puanın kesinleşmesi için çok yüksek veri hacmi bekler.
+                            <span class="text-indigo-200 font-bold underline">1. Derece (%68.2):</span> Puan odaklı. Az veri olsa bile puana güvenme eğilimindedir.<br><br>
+                            <span class="text-indigo-200 font-bold underline">2. Derece (%95.4):</span> Dengeli. Puan ve kişi sayısını ortak tartar.<br><br>
+                            <span class="text-indigo-200 font-bold underline">3. Derece (%99.7):</span> Değerlendirici odaklı. Kesinlik için çok yüksek veri hacmi bekler.
                         </div>
                     </div>
                 </div>
                 <select id="zScore" class="w-full p-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none cursor-pointer font-semibold text-slate-700 bg-white transition-all">
                     <option value="1">1. Derece (Puan Odaklı)</option>
-                    <option value="1.96" selected>2. Derece (Dengeli)</option>
+                    <option value="2" selected>2. Derece (Dengeli)</option>
                     <option value="3">3. Derece (Değerlendirici Odaklı)</option>
                 </select>
             </div>
         </div>
 
         <div class="bg-indigo-50 p-6 md:p-8 rounded-3xl shadow-sm mb-8 border border-indigo-100/50">
-            <h3 class="font-bold mb-5 text-indigo-900 text-[10px] uppercase tracking-widest flex items-center gap-2">
-                <span class="w-2 h-2 bg-indigo-500 rounded-full inline-block"></span>
-                Yeni Veri Girişi
-            </h3>
             <div class="grid grid-cols-1 md:grid-cols-12 gap-4">
                 <div class="md:col-span-4">
-                     <input type="text" id="pName" placeholder="Ürün Adı (Opsiyonel)" class="w-full p-3.5 border border-indigo-100 rounded-xl shadow-sm focus:ring-2 focus:ring-indigo-500 outline-none transition-all bg-white text-sm">
+                     <input type="text" id="pName" placeholder="Ürün Adı" class="w-full p-3.5 border border-indigo-100 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none bg-white text-sm">
                 </div>
                 <div class="md:col-span-3">
-                    <input type="number" id="pRating" step="0.1" placeholder="Puanı" class="w-full p-3.5 border border-indigo-100 rounded-xl shadow-sm focus:ring-2 focus:ring-indigo-500 outline-none transition-all bg-white text-sm font-medium">
+                    <input type="number" id="pRating" step="0.1" placeholder="Puanı" class="w-full p-3.5 border border-indigo-100 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none bg-white text-sm">
                 </div>
                 <div class="md:col-span-3">
-                     <input type="number" id="pCount" placeholder="Değerlendiren Sayısı" class="w-full p-3.5 border border-indigo-100 rounded-xl shadow-sm focus:ring-2 focus:ring-indigo-500 outline-none transition-all bg-white text-sm font-medium">
+                     <input type="number" id="pCount" placeholder="Değerlendiren Sayısı" class="w-full p-3.5 border border-indigo-100 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none bg-white text-sm">
                 </div>
                 <div class="md:col-span-2">
-                    <button onclick="addProduct()" class="w-full h-full bg-indigo-600 text-white font-black p-3 rounded-xl hover:bg-indigo-700 transition-all active:scale-95 shadow-md shadow-indigo-200 uppercase text-xs tracking-widest">
-                        EKLE
-                    </button>
+                    <button onclick="addProduct()" class="w-full h-full bg-indigo-600 text-white font-black p-3 rounded-xl hover:bg-indigo-700 transition-all active:scale-95 shadow-md text-xs tracking-widest">EKLE</button>
                 </div>
             </div>
         </div>
 
         <div class="bg-white rounded-3xl shadow-sm border border-slate-200 overflow-hidden">
-            <div class="scroll-hint text-[10px] text-center p-2 text-indigo-500 bg-indigo-50 font-bold uppercase tracking-widest">
-                ↔ Tabloyu sağa kaydırarak tüm skorları görün
-            </div>
+            <div class="scroll-hint text-[10px] text-center p-2 text-indigo-500 bg-indigo-50 font-bold uppercase tracking-widest">↔ Sağa kaydırarak tüm skorları görün</div>
             <div class="overflow-x-auto">
                 <table class="w-full text-left border-collapse min-w-[650px] md:min-w-full">
                     <thead>
@@ -114,26 +92,34 @@
                             <th class="p-5 text-center w-16"></th>
                         </tr>
                     </thead>
-                    <tbody id="productTableBody" class="text-slate-700 font-medium">
-                        </tbody>
+                    <tbody id="productTableBody" class="text-slate-700 font-medium"></tbody>
                 </table>
             </div>
-            <div id="emptyState" class="text-center p-16 text-slate-400 text-sm italic">
-                Analiz için yukarıdaki formdan ürün verilerini girmeye başlayın.
-            </div>
+            <div id="emptyState" class="text-center p-16 text-slate-400 text-sm italic">Veri girişi yapın.</div>
         </div>
     </div>
 
     <script>
         let products = [];
 
+        // KRİTİK DÜZELTME: Matematiksel Hassasiyet Artırıldı
         function calculateBetaScore(rating, count, maxScale, z) {
-            let alpha = (count * rating) + 1;
-            let beta = (count * maxScale - count * rating) + 1;
-            let n = alpha + beta;
-            let mean = alpha / n;
-            let variance = (alpha * beta) / (Math.pow(n, 2) * (n + 1));
-            return (mean - (z * Math.sqrt(variance))) * maxScale;
+            // Puanı 0-1 arasına normalize et
+            const normRating = rating / maxScale;
+            // Başarı ve başarısızlık sayılarını (alpha-beta) gerçek örneklem üzerinden hesapla
+            const successes = count * normRating;
+            const failures = count - successes;
+            
+            const alpha = successes + 1;
+            const beta = failures + 1;
+            const n = alpha + beta;
+            
+            const mean = alpha / n;
+            const variance = (alpha * beta) / (Math.pow(n, 2) * (n + 1));
+            
+            // Skor hesapla ve tekrar orijinal ölçeğe (maxScale) döndür
+            const result = (mean - (z * Math.sqrt(variance))) * maxScale;
+            return Math.max(0, result); // Negatif sonuçları engelle
         }
 
         function addProduct() {
@@ -147,12 +133,11 @@
             const count = parseInt(countInp.value);
             const name = nameInp.value.trim() || ("Ürün #" + (products.length + 1));
 
-            if(isNaN(rating) || isNaN(count)) return alert("Eksik bilgi: Lütfen puan ve değerlendiren sayısı girin.");
-            if(rating > maxScale) return alert("Hata: Puan ölçekten büyük olamaz.");
+            if(isNaN(rating) || isNaN(count)) return;
+            if(rating > maxScale) return alert("Puan ölçekten büyük!");
 
             products.push({ name, rating, count });
             updateTable();
-            
             nameInp.value = ""; rateInp.value = ""; countInp.value = "";
             nameInp.focus();
         }
@@ -168,11 +153,7 @@
             const tbody = document.getElementById('productTableBody');
             const empty = document.getElementById('emptyState');
 
-            if(products.length === 0) {
-                tbody.innerHTML = "";
-                empty.classList.remove('hidden');
-                return;
-            }
+            if(products.length === 0) { tbody.innerHTML = ""; empty.classList.remove('hidden'); return; }
             empty.classList.add('hidden');
 
             products.forEach(p => p.betaScore = calculateBetaScore(p.rating, p.count, maxScale, z));
@@ -182,16 +163,12 @@
                 <tr class="product-row border-b border-slate-100 hover:bg-slate-50/80 transition-all">
                     <td class="p-5 text-center font-bold text-slate-300 text-xs italic">#${i + 1}</td>
                     <td class="p-5 font-bold text-slate-800 text-sm">${p.name}</td>
-                    <td class="p-5 text-center">
-                        <span class="bg-slate-100 text-slate-600 px-3 py-1 rounded-lg text-xs font-bold">${p.rating.toFixed(1)} / ${maxScale}</span>
-                    </td>
-                    <td class="p-5 text-center font-semibold text-slate-500 text-sm">${p.count.toLocaleString()}</td>
+                    <td class="p-5 text-center"><span class="bg-slate-100 px-3 py-1 rounded-lg text-xs font-bold">${p.rating.toFixed(1)} / ${maxScale}</span></td>
+                    <td class="p-5 text-center text-sm">${p.count.toLocaleString()}</td>
                     <td class="p-5 text-right font-black text-indigo-700 text-xl tracking-tighter">${p.betaScore.toFixed(3)}</td>
                     <td class="p-5 text-center">
-                        <button onclick="deleteProduct(${i})" class="text-slate-300 hover:text-red-500 transition-colors p-2 rounded-full hover:bg-red-50" title="Sil">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                            </svg>
+                        <button onclick="deleteProduct(${i})" class="text-slate-300 hover:text-red-500 p-2 rounded-full hover:bg-red-50">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
                         </button>
                     </td>
                 </tr>
@@ -200,10 +177,7 @@
 
         document.getElementById('zScore').addEventListener('change', updateTable);
         document.getElementById('maxScale').addEventListener('change', updateTable);
-        document.getElementById('pCount').addEventListener('keypress', e => e.key === 'Enter' && addProduct());
+        if ('serviceWorker' in navigator) { navigator.serviceWorker.register('sw.js'); }
     </script>
 </body>
 </html>
-
-
-
